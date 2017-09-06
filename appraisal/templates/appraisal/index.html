@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+</head>
+<body>
+
+<h1> Employees List </h1>
+{% if employee_list %}
+    <ul>
+    {% for employee in employee_list %}
+        <li>{{ employee.name }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Employees Added.</p>
+{% endif %}
+
+</body>
+</html>
