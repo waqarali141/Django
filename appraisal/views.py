@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class Index(generic.ListView):
+class Index(LoginRequiredMixin, generic.ListView):
     context_object_name = 'employee_list'
     template_name = 'appraisal/index.html'
 

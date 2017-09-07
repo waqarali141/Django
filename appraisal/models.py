@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Employee(models.Model):
     def __str__(self):
         return self.name
@@ -33,7 +32,8 @@ class Appraisal(models.Model):
     year = models.CharField(max_length=4)
     score = models.IntegerField()
     is_approved = models.BooleanField(default=False)
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    to_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='receiver')
+    from_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='giver')
 
 
 class Competencies(models.Model):
@@ -43,3 +43,4 @@ class Competencies(models.Model):
     name = models.CharField(max_length=35)
     score = models.IntegerField()
     appraisal = models.ManyToManyField(Appraisal)
+
