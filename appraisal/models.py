@@ -17,7 +17,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=40)
     type = models.CharField(max_length=2,
                             choices=employee_type,
-                            default='Staff')
+                            default='sf')
     joined_date = models.DateTimeField('date joined', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     reporting_to = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)

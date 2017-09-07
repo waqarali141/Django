@@ -10,7 +10,10 @@ class Index(LoginRequiredMixin, generic.ListView):
     template_name = 'appraisal/index.html'
 
     def get_queryset(self):
-        return self.request.user.employee.all_reportee
+        try:
+            return self.request.user.employee.all_reportee
+        except:
+            return {}
 
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
