@@ -2,6 +2,7 @@
 
 {% load static %}
 
+
 <link rel="stylesheet" type="text/css" href="{% static 'appraisal/style.css' %}" />
 
 <html lang="en">
@@ -10,7 +11,7 @@
     <title>Employees</title>
 </head>
 <body>
-
+{% include "appraisal/logout_button_html.html" %}
 <h1> Employees List </h1>
 {% if employee_list %}
  <table>
@@ -22,14 +23,17 @@
       <th>staff</th>
   </tr>
     {% for employee in employee_list %}
+
           <tr>
-              <td>{{ employee.name }}</td>
-              <td>{{ employee.get_type_display }}</td>
-              <td>{{ employee.reporting_to.name }}</td>
-              <td>{{ employee.joined_date }}</td>
-              <td>{{ employee.employee_set.count }}</td>
+
+          <td><a href="{% url 'appraisal:detail' employee.id %}">{{ employee.name }} </a></td>
+          <td>{{ employee.get_type_display }}</td>
+          <td>{{ employee.reporting_to.name }}</td>
+          <td>{{ employee.joined_date }}</td>
+          <td>{{ employee.employee_set.count }}</td>
 
           </tr>
+
      {% endfor %}
 </table>
 

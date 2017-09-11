@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% include 'appraisal/logout_button_html.html' %}
+{% if employee %}
+<h1>{{ employee.name }} </h1>
+<ul>
+    <li> is_active: {{ employee.is_active }} </li>
+    <li>joined_date: {{ employee.joined_date }}</li>
+    {% if employee.reporting_to %}
+    <li>reporting to:<b> <a href="{% url 'appraisal:detail' employee.reporting_to_id %}">
+        {{ employee.reporting_to }}
+
+        </a>
+        </b>
+    </li>
+        {% endif %}
+    <li>Position: {{ employee.get_type_display }}</li>
+</ul>
+<h2>
+    Reportees
+</h2>
+    {% if employee.all_reportee %}
+        {% for reporting_employee in employee.all_reportee %}
+            <li>
+               <a href="{% url 'appraisal:detail' reporting_employee.id %}">
+                   {{ reporting_employee.name }}
+               </a>
+            </li>
+        {% endfor %}
+        {% else %}
+        <b>No Staff found </b>
+    {% endif %}
+
+{% else %}
+<h2>No User Found</h2>
+
+{% endif %}
+</body>
+</html>

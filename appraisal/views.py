@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Employee, User, Competencies
 
 
 class Index(LoginRequiredMixin, generic.ListView):
@@ -15,6 +16,15 @@ class Index(LoginRequiredMixin, generic.ListView):
         except:
             return {}
 
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the polls index.")
+class DetailUserView(LoginRequiredMixin, generic.DetailView):
+    model = Employee
+    template_name = 'appraisal/detail.html'
+    context_object_name = 'employee'
 
+    def get_queryset(self):
+        return Employee.objects.filter(pk=self.kwargs['pk'])
+
+
+
+# def index(request):
+#     return HttpResponse("Hello, world. You're at the polls index
