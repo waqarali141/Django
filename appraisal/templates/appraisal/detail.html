@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-<body>
 
 {% include 'appraisal/logout_button_html.html' %}
 {% if employee %}
@@ -20,7 +19,7 @@
         </b>
     </li>
         {% endif %}
-    <li>Position: {{ employee.get_type_display }}</li>
+    <li>Position: <b>{{ employee.get_type_display }}</b></li>
 </ul>
 <h2>
     Reportees
@@ -39,7 +38,22 @@
 
 {% else %}
 <h2>No User Found</h2>
-
 {% endif %}
+    <h3>Appraisals</h3>
+    {% for appraisal in employee.receiver.all%}
+        <p><b>Comment: </b>{{ appraisal.comment|linebreaks }}</p>
+        <p><b>Year Given: </b>{{ appraisal.year }}</p>
+        <p><b>Score: </b>{{ appraisal.score }}</p>
+        <p><b>Giver: </b><a href="{% url 'appraisal:detail' appraisal.from_employee.id %}">
+            {{ appraisal.from_employee.name}}
+        </a>
+        </p>
+
+        <p>Competency: {{ appraisal.competencies_set.all.0.name }}
+            Score: {{ appraisal.competencies_set.all.0.score }}
+        </p>
+
+
+    {% endfor %}
 </body>
 </html>
