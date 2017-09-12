@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-
+{% load my_tags %}
+{% logged_in_user user%}
 {% include 'appraisal/logout_button_html.html' %}
 {% if employee %}
 <h1>{{ employee.name }} </h1>
