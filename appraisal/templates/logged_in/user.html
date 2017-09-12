@@ -5,7 +5,13 @@
     <title></title>
 </head>
 <body>
-<div>User: <b>{{ employee }}</b></div>
+    <div>User: <b>{{ employee }}</b></div>
+    </form>
+<form action="{% url 'appraisal:logout' %}">
+    <input type="submit" value="logout" />
+
+
+
 
 
 </body>
