@@ -1,22 +1,38 @@
 <!DOCTYPE html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 {% load static %}
 
-
-<link rel="stylesheet" type="text/css" href="{% static 'appraisal/style.css' %}" />
+{##}
+{#<link rel="stylesheet" type="text/css" href="{% static 'appraisal/style.css' %}" />#}
 
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Employees</title>
+  <title>Employee Listing</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 {% load my_tags %}
 {% logged_in_user user%}
 {#{% include "appraisal/logout_button_html.html" %}#}
+<div class="container-fluid">
 <h1> Employees List </h1>
 {% if employee_list %}
- <table>
+ <table class="table table-striped" data-link="row">
+ <thead>
   <tr>
       <th>Name</th>
       <th>Role</th>
@@ -24,6 +40,8 @@
       <th>Date of joining </th>
       <th>staff</th>
   </tr>
+  </thead>
+ <tbody>
     {% for employee in employee_list %}
 
           <tr>
@@ -37,11 +55,13 @@
           </tr>
 
      {% endfor %}
+ </tbody>
 </table>
 
 {% else %}
     <p>No Employees Added.</p>
 {% endif %}
+</div>
 
 </body>
 </html>

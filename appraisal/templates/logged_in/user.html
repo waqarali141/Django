@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
 <body>
-    <div>User: <b>{{ employee }}</b></div>
-    </form>
-<form action="{% url 'appraisal:logout' %}">
-    <input type="submit" value="logout" />
+<div class="container">
+  <div class="page-header">
+    <div><b><a href="{% url 'appraisal:detail' user.employee.id %}">{{ user.employee.name|capfirst }} </a></b>
+    <a href="{% url 'appraisal:logout' %}" class="btn btn-info pull-right" role="button">logout</a>
+    </div>
 
 
-
-
-
+  </div>
+</div>
 </body>
 </html>

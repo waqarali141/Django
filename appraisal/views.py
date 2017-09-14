@@ -3,7 +3,20 @@ from __future__ import unicode_literals
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Employee, User, Competencies
+from .models import Employee, User, Competencies, Appraisal
+from .forms import AppraisalForm, CompetencyForm
+
+
+class FormContext(object):
+    appraisal_form = AppraisalForm()
+    competency_form = CompetencyForm()
+    extra_context = {'form': {'appraisal_form': appraisal_form,
+                              'competency_form': competency_form}}
+
+    def get_context_data(self, **kwargs):
+        context = super(FormContext, self).get_context_data(**kwargs)
+        context.update(self.extra_context)
+        return context
 
 
 class Index(LoginRequiredMixin, generic.ListView):
@@ -16,7 +29,8 @@ class Index(LoginRequiredMixin, generic.ListView):
         except:
             return {}
 
-class DetailUserView(LoginRequiredMixin, generic.DetailView):
+
+class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
     model = Employee
     template_name = 'appraisal/detail.html'
     context_object_name = 'employee'
@@ -25,6 +39,11 @@ class DetailUserView(LoginRequiredMixin, generic.DetailView):
         return Employee.objects.filter(pk=self.kwargs['pk'])
 
 
+def feedback(request, pk):
+    appraisal = AppraisalForm(request.POST)
+    print pk
+
+    return
 
 
 # def index(request):

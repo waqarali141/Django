@@ -41,8 +41,12 @@ class Appraisal(models.Model):
 class Competencies(models.Model):
     def __str__(self):
         return self.name
-
-    name = models.CharField(max_length=35)
+    competency_type = (('py', 'Python'),
+                       ('tw', 'Team Work'),
+                       ('dj', 'Django'),
+                       ('cm', 'Communication'),
+                       )
+    name = models.CharField(max_length=35, choices=competency_type)
     score = models.IntegerField()
     appraisal = models.ManyToManyField(Appraisal)
 

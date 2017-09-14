@@ -5,4 +5,4 @@ register = template.Library()
 
 @register.inclusion_tag('logged_in/user.html')
 def logged_in_user(user, takes_context=True):
-    return {'employee': user}
+    return {'user': user}
