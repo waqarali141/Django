@@ -5,6 +5,9 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Employee, User, Competencies, Appraisal
 from .forms import AppraisalForm, CompetencyForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse
+
 
 
 class FormContext(object):
@@ -30,6 +33,7 @@ class Index(LoginRequiredMixin, generic.ListView):
             return {}
 
 
+
 class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
     model = Employee
     template_name = 'appraisal/detail.html'
@@ -38,13 +42,27 @@ class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
     def get_queryset(self):
         return Employee.objects.filter(pk=self.kwargs['pk'])
 
+    def get_context_data(self, **kwargs):
+        context = super(DetailUserView, self).get_context_data(**kwargs)
+        under_employee = {'reporting_employee': self.request.user.employee.all_reportee}
+        context.update(under_employee)
+        return context
 
 def feedback(request, pk):
     appraisal = AppraisalForm(request.POST)
     print pk
-
     return
 
 
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the polls index
+class AddAppraisal(LoginRequiredMixin, CreateView):
+
+    model = Appraisal
+    fields = ['comment', 'year']
+
+    def form_valid(self, form):
+        form.instance.from_employee = self.request.user.employee
+        form.instance.to_employee = Employee.objects.get(pk=self.kwargs['pk'])
+        form.instance.score = 0
+        self.success_url = reverse('appraisal:detail', args=(self.kwargs['pk'],))
+        return super(AddAppraisal, self).form_valid(form)
+

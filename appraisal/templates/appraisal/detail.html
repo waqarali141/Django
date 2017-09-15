@@ -65,29 +65,36 @@
     {% for appraisal in employee.receiver.all%}
         <p><b>Comment: </b>{{ appraisal.comment|linebreaks }}</p>
         <p><b>Year Given: </b>{{ appraisal.year }}</p>
+        {% if appraisal.score %}
         <p><b>Score: </b>{{ appraisal.score }}</p>
+        {% endif %}
         <p><b>Giver: </b><a href="{% url 'appraisal:detail' appraisal.from_employee.id %}">
             {{ appraisal.from_employee.name}}
         </a>
         </p>
 
+        {% if appraisal.competencies_set %}
         <p>Competency: {{ appraisal.competencies_set.all.0.name }}
             Score: {{ appraisal.competencies_set.all.0.score }}
         </p>
-
+        {% endif %}
 
     {% endfor %}
     {% endif %}
+{#    <div>#}
+{#     <a href="{% url 'appraisal:feedback' employee.id %}" class="btn btn-info" role="button">Give Feedback</a>#}
+{#        </div>#}
+    {% if employee in reporting_employee %}
     <form action="{% url 'appraisal:feedback' employee.id%}" method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form.appraisal_form %}
-    {% bootstrap_form form.competency_form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
             {% bootstrap_icon "star" %} Give FeedBack
         </button>
     {% endbuttons %}
-</form>
+    </form>
+    {% endif %}
 </div>
 </body>
 </html>

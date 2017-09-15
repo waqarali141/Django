@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^$', views.Index.as_view(), name='index'),
     url(r'^login$', auth_views.login, name='login'),
     url(r'^logout$', auth_views.logout, name='logout'),
-    url(r'^detail/user/(?P<pk>[0-9 a-z A-Z]+)$',views.DetailUserView.as_view(),  name='detail'),
-    url('feedback/user/(?P<pk>[0-9 a-z A-Z]+)$',views.feedback, name='feedback'),
+    url(r'^detail/user/(?P<pk>[0-9 a-z A-Z]+)$', views.DetailUserView.as_view(),  name='detail'),
+    url('feedback/user/(?P<pk>[0-9 a-z A-Z]+)$', views.AddAppraisal.as_view(), name='feedback'),
     ]
 
