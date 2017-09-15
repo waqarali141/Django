@@ -7,12 +7,13 @@ from .models import Employee, User, Competencies, Appraisal
 from .forms import AppraisalForm, CompetencyForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
-
-
+from django.forms import inlineformset_factory, BaseInlineFormSet
 
 class FormContext(object):
     appraisal_form = AppraisalForm()
-    competency_form = CompetencyForm()
+    appraisal = Appraisal()
+    competency = Competencies()
+    competency_form =  inlineformset_factory(appraisal, Competencies, fields=(('name', ), ('score', )))
     extra_context = {'form': {'appraisal_form': appraisal_form,
                               'competency_form': competency_form}}
 
@@ -48,14 +49,8 @@ class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
         context.update(under_employee)
         return context
 
-def feedback(request, pk):
-    appraisal = AppraisalForm(request.POST)
-    print pk
-    return
-
 
 class AddAppraisal(LoginRequiredMixin, CreateView):
-
     model = Appraisal
     fields = ['comment', 'year']
 

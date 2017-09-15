@@ -42,10 +42,11 @@
         {% endif %}
     <li>Position: <b>{{ employee.get_type_display }}</b></li>
 </ul>
+     {% if employee.all_reportee %}
 <h2>
     Reportees
 </h2>
-    {% if employee.all_reportee %}
+
         {% for reporting_employee in employee.all_reportee %}
             <li>
                <a href="{% url 'appraisal:detail' reporting_employee.id %}">
@@ -54,7 +55,10 @@
             </li>
         {% endfor %}
         {% else %}
+        {% if employee.type != 'sf' %}
+
         <b>No Staff found </b>
+            {% endif %}
     {% endif %}
 
 {% else %}
@@ -62,6 +66,7 @@
 {% endif %}
     {% if employee.receiver.all %}
     <h3>Appraisals</h3>
+
     {% for appraisal in employee.receiver.all%}
         <p><b>Comment: </b>{{ appraisal.comment|linebreaks }}</p>
         <p><b>Year Given: </b>{{ appraisal.year }}</p>
@@ -85,7 +90,7 @@
 {#     <a href="{% url 'appraisal:feedback' employee.id %}" class="btn btn-info" role="button">Give Feedback</a>#}
 {#        </div>#}
     {% if employee in reporting_employee %}
-    <form action="{% url 'appraisal:feedback' employee.id%}" method="post" class="form">
+    <form action="{% url 'appraisal:feedback' employee.id%}" method="post" class="form-row">
     {% csrf_token %}
     {% bootstrap_form form.appraisal_form %}
     {% buttons %}
@@ -93,7 +98,11 @@
             {% bootstrap_icon "star" %} Give FeedBack
         </button>
     {% endbuttons %}
+    <div class="inline-group">
+        {% bootstrap_form form.competency_form %}
+        </div>
     </form>
+
     {% endif %}
 </div>
 </body>
