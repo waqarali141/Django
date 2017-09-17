@@ -79,7 +79,7 @@
         </p>
 
         {% if appraisal.competencies_set %}
-        <p>Competency: {{ appraisal.competencies_set.all.0.name }}
+        <p>Competency: {{ appraisal.competencies_set.all.0.get_name_display }}
             Score: {{ appraisal.competencies_set.all.0.score }}
         </p>
         {% endif %}
@@ -93,14 +93,15 @@
     <form action="{% url 'appraisal:feedback' employee.id%}" method="post" class="form-row">
     {% csrf_token %}
     {% bootstrap_form form.appraisal_form %}
+    {{ form.competency_form }}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
             {% bootstrap_icon "star" %} Give FeedBack
         </button>
     {% endbuttons %}
-    <div class="inline-group">
-        {% bootstrap_form form.competency_form %}
-        </div>
+{#    <div class="inline-group">#}
+{#        {% bootstrap_form form.competency_form %}#}
+{#        </div>#}
     </form>
 
     {% endif %}

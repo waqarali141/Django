@@ -4,18 +4,23 @@ from __future__ import unicode_literals
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Employee, User, Competencies, Appraisal
-from .forms import AppraisalForm, CompetencyForm
+from .forms import CompetencyModelForm, AppraisalModelForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
+
 class FormContext(object):
-    appraisal_form = AppraisalForm()
-    appraisal = Appraisal()
+    competency_form = CompetencyModelForm()
+    appraisal = AppraisalModelForm()
     competency = Competencies()
-    competency_form =  inlineformset_factory(appraisal, Competencies, fields=(('name', ), ('score', )))
-    extra_context = {'form': {'appraisal_form': appraisal_form,
-                              'competency_form': competency_form}}
+    appraisal_form = inlineformset_factory(Appraisal, Competencies,
+                                           fields=('name', 'score'))
+    form = appraisal_form()
+    extra_context = {'form': {'appraisal_form': appraisal,
+                              'competency_form': form}}
+    # extra_context = {'form': form}
 
     def get_context_data(self, **kwargs):
         context = super(FormContext, self).get_context_data(**kwargs)
@@ -33,6 +38,10 @@ class Index(LoginRequiredMixin, generic.ListView):
         except:
             return {}
 
+    def get_context_data(self, **kwargs):
+        context = super(Index, self).get_context_data(**kwargs)
+        return context
+        # if self.request.user.type == 'mg':
 
 
 class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
@@ -50,6 +59,21 @@ class DetailUserView(LoginRequiredMixin, FormContext, generic.DetailView):
         return context
 
 
+def add(request, pk=''):
+    appraisal = AppraisalModelForm(request.POST)
+    from_employee = request.user.employee
+    to_employee = Employee.objects.get(pk=pk)
+    appraisal.instance.from_employee = from_employee
+    appraisal.instance.to_employee = to_employee
+    recieved = appraisal.save()
+    appraisal_form = inlineformset_factory(Appraisal, Competencies,
+                                           fields=('name', 'score'))
+    formset = appraisal_form(request.POST, instance=recieved)
+    formset.save()
+    return HttpResponseRedirect(reverse('appraisal:detail', args=(pk,)))
+
+
+
 class AddAppraisal(LoginRequiredMixin, CreateView):
     model = Appraisal
     fields = ['comment', 'year']
@@ -58,6 +82,12 @@ class AddAppraisal(LoginRequiredMixin, CreateView):
         form.instance.from_employee = self.request.user.employee
         form.instance.to_employee = Employee.objects.get(pk=self.kwargs['pk'])
         form.instance.score = 0
+        appraisal_form = inlineformset_factory(Appraisal, Competencies,
+                                               fields=('name', 'score'))
+        formset = appraisal_form(self.request.POST, form)
         self.success_url = reverse('appraisal:detail', args=(self.kwargs['pk'],))
+
         return super(AddAppraisal, self).form_valid(form)
+
+
 

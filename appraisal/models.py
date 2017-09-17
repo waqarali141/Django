@@ -30,7 +30,7 @@ class Employee(models.Model):
 class Appraisal(models.Model):
     comment = models.TextField()
     year = models.CharField(max_length=4)
-    score = models.IntegerField()
+    score = models.IntegerField(null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     to_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='receiver',
                                     null=True, blank=True)
@@ -48,5 +48,5 @@ class Competencies(models.Model):
                        )
     name = models.CharField(max_length=35, choices=competency_type)
     score = models.IntegerField()
-    appraisal = models.ManyToManyField(Appraisal)
-
+    appraisal = models.ForeignKey(Appraisal, on_delete=models.CASCADE,
+                                      null=True, blank=True)
