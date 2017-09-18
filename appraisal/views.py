@@ -7,7 +7,7 @@ from .models import Employee, User, Competencies, Appraisal
 from .forms import CompetencyModelForm, AppraisalModelForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
 
@@ -63,14 +63,22 @@ def add(request, pk=''):
     appraisal = AppraisalModelForm(request.POST)
     from_employee = request.user.employee
     to_employee = Employee.objects.get(pk=pk)
-    appraisal.instance.from_employee = from_employee
-    appraisal.instance.to_employee = to_employee
-    recieved = appraisal.save()
-    appraisal_form = inlineformset_factory(Appraisal, Competencies,
-                                           fields=('name', 'score'))
-    formset = appraisal_form(request.POST, instance=recieved)
-    formset.save()
-    return HttpResponseRedirect(reverse('appraisal:detail', args=(pk,)))
+    if to_employee in from_employee.all_reportee:
+        appraisal.instance.from_employee = from_employee
+        appraisal.instance.to_employee = to_employee
+        recieved = appraisal.save()
+        appraisal_form = inlineformset_factory(Appraisal, Competencies,
+                                               fields=('name', 'score'))
+        formset = appraisal_form(request.POST, instance=recieved)
+        appraisal_score = 0
+        for competency in formset.cleaned_data:
+            appraisal_score += competency['score']
+        recieved.score = appraisal_score/len(formset.cleaned_data)
+        recieved.save()
+        formset.save()
+        return HttpResponseRedirect(reverse('appraisal:detail', args=(pk,)))
+    else:
+        return HttpResponse('Unauthorised', status=401)
 
 
 

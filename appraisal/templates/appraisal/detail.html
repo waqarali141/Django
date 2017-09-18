@@ -79,9 +79,15 @@
         </p>
 
         {% if appraisal.competencies_set %}
-        <p>Competency: {{ appraisal.competencies_set.all.0.get_name_display }}
-            Score: {{ appraisal.competencies_set.all.0.score }}
-        </p>
+        <b>Competencies:</b>
+            <ul>
+            {% for competency in appraisal.competencies_set.all %}
+                <li>
+            {{competency.get_name_display }}
+            : {{ competency.score }}
+                </li>
+            {% endfor %}
+            </ul>
         {% endif %}
 
     {% endfor %}
@@ -89,7 +95,7 @@
 {#    <div>#}
 {#     <a href="{% url 'appraisal:feedback' employee.id %}" class="btn btn-info" role="button">Give Feedback</a>#}
 {#        </div>#}
-    {% if employee in reporting_employee %}
+    {% if employee in reporting_employee and not employee.receiver.all%}
     <form action="{% url 'appraisal:feedback' employee.id%}" method="post" class="form-row">
     {% csrf_token %}
     {% bootstrap_form form.appraisal_form %}
