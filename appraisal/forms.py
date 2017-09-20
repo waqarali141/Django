@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 __author__ = 'waqarali'
 
 from django.forms import ModelForm
+
 from .models import Appraisal, Competencies
-from django.forms import inlineformset_factory
-from django import forms
 
 
 class CompetencyModelForm(ModelForm):

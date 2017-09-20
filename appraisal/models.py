@@ -11,7 +11,7 @@ class Employee(models.Model):
         return self.name
 
     @staticmethod
-    def create_employee(user, name, type='sf', reporting_to= None):
+    def create_employee(user, name, type='sf', reporting_to=None):
         employee = Employee()
         employee.user = user
         employee.name = name
@@ -76,6 +76,7 @@ class Log(models.Model):
 class Competencies(models.Model):
     def __str__(self):
         return self.name
+
     competency_type = (('py', 'Python'),
                        ('tw', 'Team Work'),
                        ('dj', 'Django'),
@@ -84,4 +85,4 @@ class Competencies(models.Model):
     name = models.CharField(max_length=35, choices=competency_type)
     score = models.IntegerField()
     appraisal = models.ForeignKey(Appraisal, on_delete=models.CASCADE,
-                                      null=True, blank=True)
+                                  null=True, blank=True)
