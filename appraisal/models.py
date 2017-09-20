@@ -3,10 +3,23 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Employee(models.Model):
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def create_employee(user, name, type='sf', reporting_to= None):
+        employee = Employee()
+        employee.user = user
+        employee.name = name
+        employee.type = type
+        if reporting_to:
+            employee.reporting_to = reporting_to
+        employee.save()
+        employee.joined_date = timezone.now()
+        return employee
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     employee_type = (('mg', 'Manager'),
@@ -47,6 +60,15 @@ class Appraisal(models.Model):
     from_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='giver',
                                       null=True, blank=True)
 
+class Log(models.Model):
+    date = models.DateField('Date Feedback given')
+    feedback = models.OneToOneField(Appraisal, on_delete=models.CASCADE)
+
+    def log(self):
+        log_string = "Employee {} has given feedback to employee {} Dated: {}".format(self.feedback.from_employee.name,
+                                                                                      self.feedback.to_employee.name,
+                                                                                      str(self.date))
+        return log_string
 
 class Competencies(models.Model):
     def __str__(self):

@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^logout$', auth_views.logout, name='logout'),
     url(r'^detail/user/(?P<pk>[0-9 a-z A-Z]+)$', views.DetailUserView.as_view(),  name='detail'),
     url('feedback/user/(?P<pk>[0-9 a-z A-Z]+)$', views.add, name='feedback'),
+    url('feedback/delete/(?P<pk>[0-9 a-z A-Z]+)/(?P<user_id>[0-9 a-z A-Z]+)', views.AuthorDelete.as_view(), name='delete_appraisal')
     ]
 

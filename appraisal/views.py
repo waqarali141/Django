@@ -10,13 +10,35 @@ from django.views.generic.edit import CreateView
 
 from .forms import CompetencyModelForm, AppraisalModelForm
 from .models import Employee, Competencies, Appraisal
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
+
+
+class AuthorDelete(DeleteView):
+    model = Appraisal
+
+    def get_success_url(self):
+        return reverse('appraisal:detail', args=(self.kwargs['user_id'],))
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Calls the delete() method on the fetched object and then
+        redirects to the success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        request.user.employee.feedback_completed = False
+        request.user.employee.save()
+
+        return HttpResponseRedirect(success_url)
 
 
 class FormContext(object):
     competency_form = CompetencyModelForm()
     appraisal = AppraisalModelForm()
     competency = Competencies()
-    appraisal_form = inlineformset_factory(Appraisal, Competencies,
+    appraisal_form = inlineformset_factory(Appraisal, Competencies, extra=4,
                                            fields=('name', 'score'))
     form = appraisal_form()
     extra_context = {'form': {'appraisal_form': appraisal,
@@ -41,7 +63,6 @@ class Index(LoginRequiredMixin, generic.ListView):
             return {}
 
     def get_context_data(self, **kwargs):
-        self.request.user.employee.set_feedback()
         context = super(Index, self).get_context_data(**kwargs)
         if self.request.user.employee.type == 'mg':
             notifications = list()

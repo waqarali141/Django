@@ -91,6 +91,16 @@
         {% endif %}
 
     {% endfor %}
+         {% if employee in reporting_employee %}
+            <form action="{% url 'appraisal:delete_appraisal' employee.receiver.all.0.id employee.id%}" method="post">{% csrf_token %}
+            {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Delete
+        </button>
+    {% endbuttons %}
+
+            {% endif %}
+</form>
     {% endif %}
 {#    <div>#}
 {#     <a href="{% url 'appraisal:feedback' employee.id %}" class="btn btn-info" role="button">Give Feedback</a>#}
@@ -101,7 +111,7 @@
     {% bootstrap_form form.appraisal_form %}
     {{ form.competency_form }}
     {% buttons %}
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary align-left">
             {% bootstrap_icon "star" %} Give FeedBack
         </button>
     {% endbuttons %}
