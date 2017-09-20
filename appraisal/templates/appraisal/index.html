@@ -26,7 +26,9 @@
 <body>
 
 {% load my_tags %}
-{% logged_in_user user%}
+{% logged_in_user user notifications%}
+{% if employee_list %}
+{% endif %}
 {#{% include "appraisal/logout_button_html.html" %}#}
 <div class="container-fluid">
 <h1> Employees List </h1>

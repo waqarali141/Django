@@ -21,20 +21,20 @@ class Employee(models.Model):
     joined_date = models.DateTimeField('date joined', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     reporting_to = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
-    # feedback_completed = models.BooleanField(default=False)
+    feedback_completed = models.BooleanField(default=False)
 
     @property
     def all_reportee(self):
         return self.employee_set.all()
 
-    # def set_feedback(self):
-    #     if self.employee_set.all():
-    #         completed = True
-    #         for employee in self.employee_set.al():
-    #             if not employee.receiver:
-    #                 completed = False
-    #                 break
-    #         self.feedback_completed = completed
+    def set_feedback(self):
+        if self.employee_set.all():
+            completed = True
+            for employee in self.employee_set.all():
+                if not employee.receiver:
+                    completed = False
+                    break
+            self.feedback_completed = completed
 
 
 class Appraisal(models.Model):

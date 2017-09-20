@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Employee, User, Competencies, Appraisal
-from .forms import CompetencyModelForm, AppraisalModelForm
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse
+from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, HttpResponse
-from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.urls import reverse
+from django.views import generic
+from django.views.generic.edit import CreateView
+
+from .forms import CompetencyModelForm, AppraisalModelForm
+from .models import Employee, Competencies, Appraisal
 
 
 class FormContext(object):
@@ -20,6 +21,7 @@ class FormContext(object):
     form = appraisal_form()
     extra_context = {'form': {'appraisal_form': appraisal,
                               'competency_form': form}}
+
     # extra_context = {'form': form}
 
     def get_context_data(self, **kwargs):
@@ -39,7 +41,14 @@ class Index(LoginRequiredMixin, generic.ListView):
             return {}
 
     def get_context_data(self, **kwargs):
+        self.request.user.employee.set_feedback()
         context = super(Index, self).get_context_data(**kwargs)
+        if self.request.user.employee.type == 'mg':
+            notifications = list()
+            for reportee in self.request.user.employee.all_reportee:
+                if reportee.feedback_completed:
+                    notifications.append({'employee': reportee})
+            context.update({'notifications': notifications})
         return context
         # if self.request.user.type == 'mg':
 
@@ -73,13 +82,16 @@ def add(request, pk=''):
         appraisal_score = 0
         for competency in formset.cleaned_data:
             appraisal_score += competency['score']
-        recieved.score = appraisal_score/len(formset.cleaned_data)
+        recieved.score = appraisal_score / len(formset.cleaned_data)
         recieved.save()
         formset.save()
+        request.user.employee.set_feedback()
+        request.user.employee.save()
+        # print request.user.employee.feedback_completed
         return HttpResponseRedirect(reverse('appraisal:detail', args=(pk,)))
+
     else:
         return HttpResponse('Unauthorised', status=401)
-
 
 
 class AddAppraisal(LoginRequiredMixin, CreateView):
@@ -96,6 +108,3 @@ class AddAppraisal(LoginRequiredMixin, CreateView):
         self.success_url = reverse('appraisal:detail', args=(self.kwargs['pk'],))
 
         return super(AddAppraisal, self).form_valid(form)
-
-
-

@@ -7,6 +7,11 @@
         <b> ({{ user.employee.get_type_display }})</b>
 
     <a href="{% url 'appraisal:logout' %}" class="btn btn-info pull-right" role="button">logout</a>
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div>User: {{ notification.employee.name }} has completed feedback</div>
+            {% endfor %}
+        {% endif %}
     </div>
 
 

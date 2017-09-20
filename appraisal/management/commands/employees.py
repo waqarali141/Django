@@ -6,7 +6,12 @@ class Command(BaseCommand):
     help = 'Shows Employees list'
 
     def handle(self, *args, **options):
-        employee_list = Employee.objects.all()[:10].values('name', 'type', 'joined_date')
+        employee_list = Employee.objects.all()[:10]
+
         for employee in employee_list:
-            employee['joined_date'] = str(employee['joined_date'])
-            self.stdout.write(self.style.SUCCESS("%s" % employee))
+            dict = {'Name': employee.name,
+                    'Position': employee.get_type_display(),
+                    'joining Date': str(employee.joined_date.date())}
+            if employee.reporting_to:
+                dict['Reporting To'] = employee.reporting_to.name
+            self.stdout.write(self.style.SUCCESS("%s" % dict))

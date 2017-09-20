@@ -25,7 +25,7 @@
 <body>
 <div class="container-fluid">
 {% load my_tags %}
-{% logged_in_user user%}
+{% logged_in_user user notifications%}
 {#{% include 'appraisal/logout_button_html.html' %}#}
 {% if employee %}
 <h1>{{ employee.name }} </h1>

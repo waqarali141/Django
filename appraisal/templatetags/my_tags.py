@@ -4,5 +4,6 @@ register = template.Library()
 
 
 @register.inclusion_tag('logged_in/user.html')
-def logged_in_user(user, takes_context=True):
-    return {'user': user}
+def logged_in_user(user, notifications, takes_context=True):
+    return {'user': user,
+            'notifications':notifications}
