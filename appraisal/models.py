@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Employee(models.Model):
     def __str__(self):
         return self.name
@@ -60,6 +61,7 @@ class Appraisal(models.Model):
     from_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='giver',
                                       null=True, blank=True)
 
+
 class Log(models.Model):
     date = models.DateField('Date Feedback given')
     feedback = models.OneToOneField(Appraisal, on_delete=models.CASCADE)
@@ -69,6 +71,7 @@ class Log(models.Model):
                                                                                       self.feedback.to_employee.name,
                                                                                       str(self.date))
         return log_string
+
 
 class Competencies(models.Model):
     def __str__(self):
