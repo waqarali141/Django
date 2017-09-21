@@ -7,6 +7,11 @@ from django.utils import timezone
 
 
 class Employee(models.Model):
+    """
+    Model Class For Employee Dtaa
+    Containing All the information about an employee/user
+    """
+
     def __str__(self):
         return self.name
 
@@ -37,10 +42,13 @@ class Employee(models.Model):
     reporting_to = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     feedback_completed = models.BooleanField(default=False)
 
+    # Returns An employee list reporting to the Current Employee
     @property
     def all_reportee(self):
         return self.employee_set.all()
 
+    # Set Feedback completed for the given employee.
+    # Only set true when the employee has given feedback to all the reporting employees under him
     def set_feedback(self):
         if self.employee_set.all():
             completed = True
@@ -52,6 +60,10 @@ class Employee(models.Model):
 
 
 class Appraisal(models.Model):
+    """
+    Model Class For A feedback
+    Containing All the information about the Feedback
+    """
     comment = models.TextField()
     year = models.CharField(max_length=4)
     score = models.IntegerField(null=True, blank=True)
@@ -63,6 +75,9 @@ class Appraisal(models.Model):
 
 
 class Log(models.Model):
+    """
+    Model Class Logging when an employee gives Feedback to other Employee
+    """
     date = models.DateField('Date Feedback given')
     feedback = models.OneToOneField(Appraisal, on_delete=models.CASCADE)
 
@@ -74,6 +89,10 @@ class Log(models.Model):
 
 
 class Competencies(models.Model):
+    """
+    Model Class For Competencies for a given feedback
+    """
+
     def __str__(self):
         return self.name
 
@@ -86,4 +105,3 @@ class Competencies(models.Model):
     score = models.IntegerField()
     appraisal = models.ForeignKey(Appraisal, on_delete=models.CASCADE,
                                   null=True, blank=True)
-

@@ -7,12 +7,20 @@ from .models import Appraisal, Competencies
 
 
 class CompetencyModelForm(ModelForm):
+    """
+        Competency ModelForm
+    """
+
     class Meta:
         model = Competencies
         fields = ['name', 'score']
 
 
 class AppraisalModelForm(ModelForm):
+    """
+        Appraisal ModelForm
+    """
+
     class Meta:
         model = Appraisal
         fields = ['comment', 'year']

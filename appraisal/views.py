@@ -23,8 +23,6 @@ class FormContext(object):
     extra_context = {'form': {'appraisal_form': appraisal,
                               'competency_form': form}}
 
-    # extra_context = {'form': form}
-
     def get_context_data(self, **kwargs):
         context = super(FormContext, self).get_context_data(**kwargs)
         context.update(self.extra_context)
@@ -124,7 +122,6 @@ class AppraisalDelete(DeleteView):
 
         return HttpResponseRedirect(success_url)
 
-
 # @login_required(login_url='/appraisal/login')
 # def add(request, pk=''):
 #     appraisal = AppraisalModelForm(request.POST)
@@ -150,4 +147,3 @@ class AppraisalDelete(DeleteView):
 #
 #     else:
 #         return HttpResponse('Unauthorised', status=401)
-
