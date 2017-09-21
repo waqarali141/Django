@@ -86,3 +86,4 @@ class Competencies(models.Model):
     score = models.IntegerField()
     appraisal = models.ForeignKey(Appraisal, on_delete=models.CASCADE,
                                   null=True, blank=True)
+
